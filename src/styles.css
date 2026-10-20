@@ -1,0 +1,363 @@
+/* JobMatcher AI design tokens. Cobalt carries structure and actions; amber marks what needs the user's attention. */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --surface-2: #eaeef3;
+  --fg: #16212c;
+  --muted: #5a6774;
+  --line: #d5dce4;
+  --accent: #1f5fd1;
+  --accent-fg: #ffffff;
+  --accent-soft: #e3ecfb;
+  --attn: #a86200;
+  --attn-soft: #fbeedb;
+  --high: #b4232f;
+  --high-soft: #fbe6e8;
+  --med: #9a5b00;
+  --low: #2c7a4b;
+  --focus: #1f5fd1;
+  --radius: 8px;
+  --display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --body: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f151b;
+    --surface: #16202a;
+    --surface-2: #1d2a36;
+    --fg: #e3e9ef;
+    --muted: #94a2af;
+    --line: #2a3744;
+    --accent: #7da8ff;
+    --accent-fg: #0b1220;
+    --accent-soft: #1b2c47;
+    --attn: #f0a640;
+    --attn-soft: #3a2a12;
+    --high: #ff808a;
+    --high-soft: #3a1a1e;
+    --med: #f1b85a;
+    --low: #6fcb93;
+    --focus: #7da8ff;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.6 var(--body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--body);
+}
+p {
+  margin: 0;
+  max-width: 68ch;
+}
+a {
+  color: var(--accent);
+}
+code,
+.mono {
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+.muted {
+  color: var(--muted);
+}
+.eyebrow {
+  font: 500 12px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* layout */
+.container {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.stack {
+  display: grid;
+  gap: 24px;
+}
+.stack-sm {
+  display: grid;
+  gap: 12px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.row.between {
+  justify-content: space-between;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 16px;
+}
+.grid-2 > *,
+.stack > *,
+.stack-sm > * {
+  min-width: 0;
+}
+
+/* surfaces */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+.card.flat {
+  background: var(--surface-2);
+  border-color: transparent;
+}
+
+/* controls */
+.btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+  font: 500 14px/1 var(--body);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: var(--accent);
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+.btn.primary:hover {
+  filter: brightness(1.08);
+}
+.btn.danger {
+  color: var(--high);
+  border-color: var(--high);
+}
+.btn.ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn.small {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+label,
+.label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+select,
+textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.4 var(--body);
+}
+textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-weight: 400;
+  color: var(--fg);
+  font-size: 14px;
+}
+.check input {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+legend {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 0;
+  margin-bottom: 6px;
+}
+.hint {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* feedback */
+.banner {
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.banner.error {
+  background: var(--high-soft);
+  border-color: var(--high);
+  color: var(--fg);
+}
+.banner.ok {
+  border-color: var(--low);
+}
+.banner.attn {
+  background: var(--attn-soft);
+  border-color: var(--attn);
+}
+
+.chip {
+  display: inline-block;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.chip.HIGH,
+.chip.high {
+  color: var(--high);
+}
+.chip.MEDIUM,
+.chip.med {
+  color: var(--med);
+}
+.chip.LOW,
+.chip.low {
+  color: var(--low);
+}
+.chip.neutral {
+  color: var(--muted);
+}
+.chip.accent {
+  color: var(--accent);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.error-text {
+  color: var(--high);
+}
